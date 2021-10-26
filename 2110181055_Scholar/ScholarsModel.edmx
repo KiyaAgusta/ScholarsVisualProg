@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="db_scholarsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="faculties">
+          <Key>
+            <PropertyRef Name="faculty_id" />
+          </Key>
+          <Property Name="faculty_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="faculty_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="accreditation" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lecturers">
+          <Key>
+            <PropertyRef Name="lecturer_id" />
+          </Key>
+          <Property Name="lecturer_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="university_id" Type="int" Nullable="false" />
+          <Property Name="faculty_id" Type="int" Nullable="false" />
+          <Property Name="lecturer_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="degree" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="gender" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="universities">
+          <Key>
+            <PropertyRef Name="university_id" />
+          </Key>
+          <Property Name="university_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="university_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="location" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_lecturers_faculties">
+          <End Role="faculties" Type="Self.faculties" Multiplicity="1" />
+          <End Role="lecturers" Type="Self.lecturers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="faculties">
+              <PropertyRef Name="faculty_id" />
+            </Principal>
+            <Dependent Role="lecturers">
+              <PropertyRef Name="faculty_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lecturers_universities">
+          <End Role="universities" Type="Self.universities" Multiplicity="1" />
+          <End Role="lecturers" Type="Self.lecturers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="universities">
+              <PropertyRef Name="university_id" />
+            </Principal>
+            <Dependent Role="lecturers">
+              <PropertyRef Name="university_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="db_scholarsModelStoreContainer">
+          <EntitySet Name="faculties" EntityType="Self.faculties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lecturers" EntityType="Self.lecturers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="universities" EntityType="Self.universities" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_lecturers_faculties" Association="Self.FK_lecturers_faculties">
+            <End Role="faculties" EntitySet="faculties" />
+            <End Role="lecturers" EntitySet="lecturers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lecturers_universities" Association="Self.FK_lecturers_universities">
+            <End Role="universities" EntitySet="universities" />
+            <End Role="lecturers" EntitySet="lecturers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="db_scholarsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="faculty">
+          <Key>
+            <PropertyRef Name="faculty_id" />
+          </Key>
+          <Property Name="faculty_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="faculty_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="accreditation" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="lecturers" Relationship="Self.FK_lecturers_faculties" FromRole="faculties" ToRole="lecturers" />
+        </EntityType>
+        <EntityType Name="lecturer">
+          <Key>
+            <PropertyRef Name="lecturer_id" />
+          </Key>
+          <Property Name="lecturer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="university_id" Type="Int32" Nullable="false" />
+          <Property Name="faculty_id" Type="Int32" Nullable="false" />
+          <Property Name="lecturer_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="degree" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="faculty" Relationship="Self.FK_lecturers_faculties" FromRole="lecturers" ToRole="faculties" />
+          <NavigationProperty Name="university" Relationship="Self.FK_lecturers_universities" FromRole="lecturers" ToRole="universities" />
+        </EntityType>
+        <EntityType Name="university">
+          <Key>
+            <PropertyRef Name="university_id" />
+          </Key>
+          <Property Name="university_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="university_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="lecturers" Relationship="Self.FK_lecturers_universities" FromRole="universities" ToRole="lecturers" />
+        </EntityType>
+        <Association Name="FK_lecturers_faculties">
+          <End Role="faculties" Type="Self.faculty" Multiplicity="1" />
+          <End Role="lecturers" Type="Self.lecturer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="faculties">
+              <PropertyRef Name="faculty_id" />
+            </Principal>
+            <Dependent Role="lecturers">
+              <PropertyRef Name="faculty_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lecturers_universities">
+          <End Role="universities" Type="Self.university" Multiplicity="1" />
+          <End Role="lecturers" Type="Self.lecturer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="universities">
+              <PropertyRef Name="university_id" />
+            </Principal>
+            <Dependent Role="lecturers">
+              <PropertyRef Name="university_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="db_scholarsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="faculties" EntityType="Self.faculty" />
+          <EntitySet Name="lecturers" EntityType="Self.lecturer" />
+          <EntitySet Name="universities" EntityType="Self.university" />
+          <AssociationSet Name="FK_lecturers_faculties" Association="Self.FK_lecturers_faculties">
+            <End Role="faculties" EntitySet="faculties" />
+            <End Role="lecturers" EntitySet="lecturers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lecturers_universities" Association="Self.FK_lecturers_universities">
+            <End Role="universities" EntitySet="universities" />
+            <End Role="lecturers" EntitySet="lecturers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="db_scholarsModelStoreContainer" CdmEntityContainer="db_scholarsEntities">
+          <EntitySetMapping Name="faculties">
+            <EntityTypeMapping TypeName="db_scholarsModel.faculty">
+              <MappingFragment StoreEntitySet="faculties">
+                <ScalarProperty Name="faculty_id" ColumnName="faculty_id" />
+                <ScalarProperty Name="faculty_name" ColumnName="faculty_name" />
+                <ScalarProperty Name="accreditation" ColumnName="accreditation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lecturers">
+            <EntityTypeMapping TypeName="db_scholarsModel.lecturer">
+              <MappingFragment StoreEntitySet="lecturers">
+                <ScalarProperty Name="lecturer_id" ColumnName="lecturer_id" />
+                <ScalarProperty Name="university_id" ColumnName="university_id" />
+                <ScalarProperty Name="faculty_id" ColumnName="faculty_id" />
+                <ScalarProperty Name="lecturer_name" ColumnName="lecturer_name" />
+                <ScalarProperty Name="degree" ColumnName="degree" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="universities">
+            <EntityTypeMapping TypeName="db_scholarsModel.university">
+              <MappingFragment StoreEntitySet="universities">
+                <ScalarProperty Name="university_id" ColumnName="university_id" />
+                <ScalarProperty Name="university_name" ColumnName="university_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="location" ColumnName="location" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
